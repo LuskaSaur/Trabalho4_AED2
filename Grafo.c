@@ -1,5 +1,48 @@
 #include "./Lib/Grafo.h"
 
+void create_graph(int number_componentes, int per_connectivity, int number_vertices, Graph *graph){
+	per_connectivity = per_connectivity%101;
+	int newVert = (per_connectivity * (number_vertices - 1))/100;
+	if(newVert < 1)
+		return;
+	graph->number_vertices = number_vertices;
+	graph->adjList = (List *)malloc(sizeof(List) * number_vertices);
+	int vertices_per_components = number_vertices/number_componentes;
+	for(int i=0; i<number_componentes; ++i){
+		for(int j=i*vertices_per_components; j<vertices_per_components*(i+1); ++j){
+			if(j == ((vertices_per_components*(i+1))-1) )
+				push_list(i*vertices_per_components, &graph->adjList[j]);
+			else
+				push_list(j+1, &graph->adjList[j]);
+		}
+	}
+	newVert--;
+	if(newVert < 1)
+		return;
+	for(int i=0; i<number_vertices; i++){
+		int first_component = (i/number_componentes) * number_componentes;
+		//printf("i = %d and first = %d\n", i, first_component);
+		for(int j=0, k=0, vert = first_component; j<number_vertices, k<newVert; j++, vert++){
+			printf("i = %d - first_component = %d - vert = %d\n", i, first_component, vert);
+			vert = vert%number_vertices;
+			if(vert != i){
+				if(first_component+vertices_per_components-1 == i){
+					if(vert != first_component){
+						push_list(vert, &graph->adjList[i]);
+						k++;
+					}
+				}
+				else{
+					if(vert != i+1){
+						push_list(vert, &graph->adjList[i]);
+						k++;
+					}
+				}
+			}
+		}
+	}
+}
+
 void create_graph_connected(int per_connectivity, int number_vertices, Graph *graph){
 	per_connectivity = per_connectivity%101;
 	int newVert = (per_connectivity * (number_vertices - 1))/100;

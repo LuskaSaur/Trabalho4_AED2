@@ -8,7 +8,8 @@
 
 int main(){
 	Graph graph;
-	create_graph_connected(20,7,&graph);
+	//create_graph_connected(20,7,&graph);
+	create_graph(3, 10, 12, &graph);
 	show_adjList_vertices(graph);
 	printf("DFS-Recursive sequence: \n");
 	DFS_Recursive_Caller(graph);
@@ -16,8 +17,8 @@ int main(){
 	DFS_Stack(graph);
 	printf("BFS sequence: \n");
 	BFS(graph);
-	printf("Cycles: \n");
-	Finding_Cycles(graph);
-	printf("Ways in Graph: \n");
-	all_way_graph_caller(graph);
+	//printf("Cycles: \n");
+	//Finding_Cycles(graph);
+	//printf("Ways in Graph: \n");
+	//all_way_graph_caller(graph);
 }

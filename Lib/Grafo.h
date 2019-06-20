@@ -11,6 +11,7 @@ typedef struct Graph{
 	List *adjList;
 }Graph;
 
+void create_graph(int number_componentes, int per_connectivity, int number_vertices, Graph *graph);
 void create_graph_connected(int per_connectivity, int number_vertices, Graph *graph);
 void show_adjList_vertices(Graph graph);
 void DFS_Stack(Graph graph);
