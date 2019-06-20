@@ -138,26 +138,27 @@ void BFS(Graph graph){
 	printf("\n");
 }
 
-void Finding_Cycles(Graph graph){
-	int *vis = (int*)malloc(sizeof(int) * graph.number_vertices);
-	for(int i=0; i<graph.number_vertices; i++)
-		vis[i] = -1;
-	Stack stack;
-	new_stack(&stack);
-	push_stack(0, &stack);
-	vis[0] = 1;
-	while(!stack_empty(stack)){
-		int cur = top(stack);
-		pop_stack(&stack);
-		for(Element* it = graph.adjList[cur].first; it != NULL; it = it->prox){
-			if(vis[it->data] == -1){
-				vis[it->data] = 1;
-				push_stack(it->data, &stack);
-			}
-			else
-				printf("A cycle has been founded!\n");
+int Dfs_Finding_Cycles(int cur, Graph *graph, int *color){
+	color[cur] = 1;
+	for(Element *it = graph->adjList[cur].first; it != NULL; it = it->prox){
+		int act = it->data;
+		if(color[act] == 0){
+			if(Dfs_Finding_Cycles(act, graph, color) == 1)
+				return 1;
 		}
+		else if(color[act] == 1)
+			return 1;
 	}
+	color[cur] = 2;
+	return 0;
+}
+
+void Finding_Cycles(Graph graph){
+	int *color = (int*)malloc(sizeof(int) * graph.number_vertices);
+	for(int i=0; i<graph.number_vertices; i++)
+		color[i] = 0;
+	if(Dfs_Finding_Cycles(0,&graph,color) == 1)
+		printf("A Cycle Has been founded!\n");
 }
 
 void all_way_graph_caller(Graph graph){
