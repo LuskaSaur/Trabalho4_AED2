@@ -21,9 +21,7 @@ void create_graph(int number_componentes, int per_connectivity, int number_verti
 		return;
 	for(int i=0; i<number_vertices; i++){
 		int first_component = (i/number_componentes) * number_componentes;
-		//printf("i = %d and first = %d\n", i, first_component);
 		for(int j=0, k=0, vert = first_component; j<number_vertices, k<newVert; j++, vert++){
-			printf("i = %d - first_component = %d - vert = %d\n", i, first_component, vert);
 			vert = vert%number_vertices;
 			if(vert != i){
 				if(first_component+vertices_per_components-1 == i){

@@ -17,8 +17,8 @@ int main(){
 	DFS_Stack(graph);
 	printf("BFS sequence: \n");
 	BFS(graph);
-	//printf("Cycles: \n");
-	//Finding_Cycles(graph);
-	//printf("Ways in Graph: \n");
-	//all_way_graph_caller(graph);
+	printf("Cycles: \n");
+	Finding_Cycles(graph);
+	printf("Ways in Graph: \n");
+	all_way_graph_caller(graph);
 }
