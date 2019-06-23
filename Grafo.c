@@ -1,5 +1,7 @@
 #include "./Lib/Grafo.h"
 
+const int print_ele = 0;
+
 void create_graph(int number_componentes, int per_connectivity, int number_vertices, Graph *graph){
 	per_connectivity = per_connectivity%101;
 	int newVert = (per_connectivity * (number_vertices - 1))/100;
@@ -73,39 +75,44 @@ void show_adjList_vertices(Graph graph){
 	}
 }
 
-void DFS_Stack(Graph graph){
+void DFS_Stack(Graph graph, int start){
 	int *vis = (int*)malloc(sizeof(int) * graph.number_vertices);
 	for(int i=0; i<graph.number_vertices; i++)
 		vis[i] = -1;
 	Stack stack;
 	new_stack(&stack);
-	push_stack(0, &stack);
-	vis[0] = 1;
+	push_stack(start, &stack);
+	vis[start] = 1;
 	while(!stack_empty(stack)){
 		int cur = top(stack);
-		printf("%d ", cur);
+		if(print_ele)
+			printf("%d ", cur);
 		pop_stack(&stack);
 		for(Element* it = graph.adjList[cur].first; it != NULL; it = it->prox){
-			if(vis[it->data] == -1){
-				vis[it->data] = 1;
-				push_stack(it->data, &stack);
+			int act = it->data;
+			if(vis[act] == -1){
+				vis[act] = 1;
+				push_stack(act, &stack);
 			}
 		}
 	}
-	printf("\n");
+	if(print_ele)
+		printf("\n");
 }
 
-void DFS_Recursive_Caller(Graph graph){
+void DFS_Recursive_Caller(Graph graph, int start){
 	int *vis = (int*)malloc(sizeof(int) * graph.number_vertices);
 	for(int i=0; i<graph.number_vertices; i++)
 		vis[i] = -1;
-	vis[0] = 1;
-	DFS_Recursive(0, &graph, vis);
-	printf("\n");
+	vis[start] = 1;
+	DFS_Recursive(start, &graph, vis);
+	if(print_ele)
+		printf("\n");
 }
 
 void DFS_Recursive(int cur, Graph *graph, int *vis){
-	printf("%d ", cur);
+	if(print_ele)
+		printf("%d ", cur);
 	for(Element *it = graph->adjList[cur].first; it != NULL; it = it->prox){
 		int act = it->data;
 		if(vis[act] == -1){
@@ -115,17 +122,18 @@ void DFS_Recursive(int cur, Graph *graph, int *vis){
 	}
 }
 
-void BFS(Graph graph){
+void BFS(Graph graph, int start){
 	int *vis = (int*)malloc(sizeof(int) * graph.number_vertices);
 	for(int i=0; i<graph.number_vertices; i++)
 		vis[i] = -1;
 	Queue queue;
 	new_queue(&queue);
-	push_queue(0, &queue);
-	vis[0] = 1;
+	push_queue(start, &queue);
+	vis[start] = 1;
 	while(!queue_empty(queue)){
 		int cur = front_queue(queue);
-		printf("%d ", cur);
+		if(print_ele)
+			printf("%d ", cur);
 		pop_queue(&queue);
 		for(Element *it = graph.adjList[cur].first; it != NULL; it = it->prox){
 			int act = it->data;
@@ -135,7 +143,8 @@ void BFS(Graph graph){
 			}
 		}
 	}
-	printf("\n");
+	if(print_ele)
+		printf("\n");
 }
 
 int Dfs_Finding_Cycles(int cur, Graph *graph, int *color){
@@ -153,12 +162,22 @@ int Dfs_Finding_Cycles(int cur, Graph *graph, int *color){
 	return 0;
 }
 
-void Finding_Cycles(Graph graph){
+int Finding_Cycles(Graph graph){
 	int *color = (int*)malloc(sizeof(int) * graph.number_vertices);
-	for(int i=0; i<graph.number_vertices; i++)
-		color[i] = 0;
-	if(Dfs_Finding_Cycles(0,&graph,color) == 1)
-		printf("A Cycle Has been founded!\n");
+	int *visited = (int*)malloc(sizeof(int) * graph.number_vertices);
+	for(int i=0; i < graph.number_vertices; i++)
+		visited[i] = color[i] = 0;
+	for(int i=0; i < graph.number_vertices; i++){
+		if(visited[i])
+			continue;
+		if(Dfs_Finding_Cycles(0,&graph,color))
+			return 1;
+		for(int i=0; i < graph.number_vertices; i++){
+			visited[i] += color[i];
+			color[i] = 0;
+		}
+	}
+	return 0;
 }
 
 void all_way_graph_caller(Graph graph){
