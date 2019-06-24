@@ -67,6 +67,25 @@ void create_graph_connected(int per_connectivity, int number_vertices, Graph *gr
 	}
 }
 
+void create_graph_acyclic(int per_connectivity, int number_vertices, Graph *graph){
+	per_connectivity = per_connectivity%101;
+	int newVert = (per_connectivity * (number_vertices - 1))/100;
+	graph->number_vertices = number_vertices;
+	graph->adjList = (List*)malloc(sizeof(List) * number_vertices);
+	if(newVert < 1)
+		return;
+	for(int i=0; i<number_vertices; i++){
+		if(newVert < 1)
+			return;
+		for(int j=i+1; j<number_vertices; j++){
+			push_list(j, &graph->adjList[i]);
+			newVert--;
+			if(newVert < 1)
+				return;
+		}
+	}
+}
+
 void show_adjList_vertices(Graph graph){
 	int n = graph.number_vertices;
 	for(int i=0; i<n; i++){
@@ -181,27 +200,32 @@ int Finding_Cycles(Graph graph){
 }
 
 void all_way_graph_caller(Graph graph){
-	char *sequence = (char*)malloc(sizeof(char) * (graph.number_vertices + 1));
-	for(int i=0; i<graph.number_vertices; i++)
-		all_way_graph(i, &graph, sequence, 0);
+	Stack stack;
+	new_stack(&stack);
+	int *visited = (int*)malloc(sizeof(int) * graph.number_vertices);
+	for(int i=0; i<graph.number_vertices; i++){
+		for(int i=0; i<graph.number_vertices; i++)
+			visited[i] = 0;
+		visited[i] = 1;
+		push_stack(i, &stack);
+		all_way_graph(i, &graph, &stack, visited);
+		pop_stack(&stack);
+	}
 }
 
-void all_way_graph(int cur, Graph *graph, char *sequence, int size){
-	if(size == graph->number_vertices){
-		sequence[size] = '\0';
-		printf("%s\n", sequence);
+void all_way_graph(int cur, Graph *graph, Stack *stack, int *visited){
+	if(stack->size == graph->number_vertices){
+		show_stack(*stack);
 		return;
 	}	
 	for(Element *it = graph->adjList[cur].first; it != NULL; it = it->prox){
-		int act = it->data, valid = 1;
-		for(int i=0; i<size; i++)
-			if(act == (sequence[i] - '0'))
-				valid = 0;
-		if(valid == 0)
-			continue;
-		else{
-			sequence[size] = act + '0';
-			all_way_graph(act, graph, sequence, size+1);
+		int act = it->data;
+		if(visited[act] == 0){
+			push_stack(act, stack);
+			visited[act] = 1;
+			all_way_graph(act, graph,stack, visited);
+			visited[act] = 0;
+			pop_stack(stack);
 		}
 	}
 }

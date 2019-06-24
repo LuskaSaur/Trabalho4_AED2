@@ -9,18 +9,19 @@
 
 //To do: Criar funcao que gera grafos sem ciclo.
 
-const int number_of_vertices = 100;
-const int percentual_connectivity = 1;
+const int number_of_vertices = 10;
+const int percentual_connectivity = 20;
 const int DEBUG = 0;
 
 int main(){
 	clock_t t[2];
-	Graph graph;
+	Graph graph, agraph;
 	double aver = 0.0, aver1 = 0.0;
 
 	//1) Criar grafos conexos com diferentes quantidades de vértices e graus de conectividade.
 	printf("\n1) Chamando funcao que cria o grafo conexos\n");
 	create_graph_connected(percentual_connectivity, number_of_vertices, &graph);//Porcertangem de conectividade, numero de vértices e Grafo
+	create_graph_acyclic(percentual_connectivity, number_of_vertices, &agraph);//Cria um grafo acíclico
 	printf("Grafo Criado\n");
 
 	//2) Busca em Largura – mostrar a árvore resultante do caminhamento; marcar tempo de execução para cada busca e a média das buscas.
@@ -71,7 +72,7 @@ int main(){
 
 	//4) Todos os caminhos usando busca em profundidade – mostrar todas as sequências de vértices geradas. Usar um grafo de tamanho adequado ao exercício.
 	printf("4) Mostrar todos os possiveis caminhos no Grafo: \n");
-	printf("Caminhos: \n");
+	printf("Caminhos: \n\n");
 	all_way_graph_caller(graph);
 	printf("\n");
 
@@ -79,7 +80,7 @@ int main(){
 	 *		Testar diferentes grafos com e sem ciclos, de diversos tamanhos e graus de conectividade.
 	 */
 	printf("5) Determinar se um dado grafo possui ou nao ciclos: \n");
-	if(Finding_Cycles(graph))
+	if(Finding_Cycles(agraph))
 		printf("Este grafo possui um ciclo\n");
 
 	//FIM TRABALHO 4

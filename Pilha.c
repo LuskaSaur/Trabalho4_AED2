@@ -36,7 +36,10 @@ void pop_stack(Stack *stack){
 void show_stack(Stack stack){
 	element *tmp = stack.first;
 	while(tmp){
-		printf("%d ", tmp->data);
+		if(tmp->prox)
+			printf("%d -> ", tmp->data);
+		else
+			printf("%d", tmp->data);
 		tmp = tmp->prox;
 	}
 	printf("\n");
